@@ -17,45 +17,45 @@ class PaymentController extends Controller
      * @return \Illuminate\Http\Response
      */
        
-public function index(Request $request)
-{
-    // Update statues based on end_date
-    DB::table('instalments')->whereDate('end_date', '>', now())->update(['statues' => 'active']);
-    DB::table('instalments')->whereDate('end_date', '<', now())->update(['statues' => 'expired']);
+    public function index(Request $request)
+    {
+        // Update statues based on end_date
+        DB::table('instalments')->whereDate('end_date', '>', now())->update(['statues' => 'active']);
+        DB::table('instalments')->whereDate('end_date', '<', now())->update(['statues' => 'expired']);
 
-    // Return JSON if AJAX request (DataTables)
-    if ($request->ajax()) {
-        $data = DB::table('instalments')
-            ->join('registereds', 'registereds.id', '=', 'instalments.registerd_id')
-            ->join('branches', 'branches.id', '=', 'instalments.branch_id')
-            ->join('academies', 'academies.id', '=', 'instalments.academy_id')
-            ->select([
-                'instalments.id',
-                'instalments.registerd_id',
-                'registereds.name',
-                'branches.branch_name as branch_name',
-                'academies.academy_name as academy_name',
-                'instalments.payment_date',
-                'instalments.amount',
-                'instalments.pay_method',
-                'instalments.start_date',
-                'instalments.end_date',
-                'instalments.statues',
-            ])
-            ->get();
+        // Return JSON if AJAX request (DataTables)
+        if ($request->ajax()) {
+            $data = DB::table('instalments')
+                ->join('registereds', 'registereds.id', '=', 'instalments.registerd_id')
+                ->join('branches', 'branches.id', '=', 'instalments.branch_id')
+                ->join('academies', 'academies.id', '=', 'instalments.academy_id')
+                ->select([
+                    'instalments.id',
+                    'instalments.registerd_id',
+                    'registereds.name',
+                    'branches.branch_name as branch_name',
+                    'academies.academy_name as academy_name',
+                    'instalments.payment_date',
+                    'instalments.amount',
+                    'instalments.pay_method',
+                    'instalments.start_date',
+                    'instalments.end_date',
+                    'instalments.statues',
+                ])
+                ->get();
 
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->addColumn('action', function ($row) {
-                return '<a href="' . url('student', $row->registerd_id) . '" class="btn btn-sm btn-info">Show</a>';
-            })
-            ->rawColumns(['action'])
-            ->make(true);
+            return DataTables::of($data)
+                ->addIndexColumn()
+                ->addColumn('action', function ($row) {
+                    return '<a href="' . url('student', $row->registerd_id) . '" class="btn btn-sm btn-info">Show</a>';
+                })
+                ->rawColumns(['action'])
+                ->make(true);
+        }
+
+        // Return view for the page
+        return view('admin.payments.index');
     }
-
-    // Return view for the page
-    return view('admin.payments.index');
-}
 
     /**
      * Show the form for creating a new resource.
