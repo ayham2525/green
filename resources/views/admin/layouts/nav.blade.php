@@ -29,7 +29,7 @@ $academy = Academy::all();
           <li class="nav-item dropdown">
             <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <div class="avatar avatar-xl">
-                <img class="rounded-circle" src="http://127.0.0.1:8000/assets/img/logo.png" alt="" />
+                <img class="rounded-circle" src="{{url('assets/img/avatar.png')}}" alt="" />
               </div>
             </a>
             <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
